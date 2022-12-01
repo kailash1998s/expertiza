@@ -108,6 +108,7 @@ class QuestionnairesController < ApplicationController
     # If 'Add' or 'Edit/View advice' is clicked, redirect appropriately
     if params[:add_new_questions]
       puts("reached add new question -------------")
+      Rails.logger.debug("debug:: hello")
       # redirect_to action: 'add_new_questions', id: params.permit(:id)[:id], question: params.permit(:new_question)[:new_question]
       nested_keys = params[:new_question].keys
       permitted_params = params.permit(:id, :new_question => nested_keys)
