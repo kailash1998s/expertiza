@@ -122,13 +122,14 @@ class QuestionnairesController < ApplicationController
         # Save all questions
         unless params[:question].nil?
           params[:question].each_pair do |k, v|
-            @question = Question.find(k)
-            # example of 'v' value
-            # {"seq"=>"1.0", "txt"=>"WOW", "weight"=>"1", "size"=>"50,3", "max_label"=>"Strong agree", "min_label"=>"Not agree"}
-            v.each_pair do |key, value|
-              @question.send(key + '=', value) unless @question.send(key) == value
-            end
-            @question.save
+            redirect_to controller:'questions', action:'testing', k: k, v: v
+            # @question = Question.find(k)
+            # # example of 'v' value
+            # # {"seq"=>"1.0", "txt"=>"WOW", "weight"=>"1", "size"=>"50,3", "max_label"=>"Strong agree", "min_label"=>"Not agree"}
+            # v.each_pair do |key, value|
+            #   @question.send(key + '=', value) unless @question.send(key) == value
+            # end
+            # @question.save
           end
         end
         flash[:success] = 'The questionnaire has been successfully updated!'

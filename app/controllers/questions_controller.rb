@@ -91,6 +91,16 @@ class QuestionsController < ApplicationController
     render json: types.to_a
   end
 
+  def testing
+    question = Question.find(params[:k])
+    # example of 'v' value
+    # {"seq"=>"1.0", "txt"=>"WOW", "weight"=>"1", "size"=>"50,3", "max_label"=>"Strong agree", "min_label"=>"Not agree"}
+    params[:v].each_pair do |key, value|
+      question.send(key + '=', value) unless @question.send(key) == value
+    end
+    question.save
+  end
+
   private
 
   def question_params
