@@ -114,6 +114,7 @@ class QuestionnairesController < ApplicationController
     elsif params[:view_advice]
       redirect_to controller: 'advice', action: 'edit_advice', id: params[:id]
     else
+      puts("reached else -------------")
       @questionnaire = Questionnaire.find(params[:id])
       begin
         # Save questionnaire information
@@ -122,7 +123,7 @@ class QuestionnairesController < ApplicationController
         # Save all questions
         unless params[:question].nil?
           params[:question].each_pair do |k, v|
-            redirect_to controller:'questions', action:'testing', k: k, v: v
+            redirect_to controller:'questions', action:'saveFromQuestionnaire', k: k, v: v
             # @question = Question.find(k)
             # # example of 'v' value
             # # {"seq"=>"1.0", "txt"=>"WOW", "weight"=>"1", "size"=>"50,3", "max_label"=>"Strong agree", "min_label"=>"Not agree"}
@@ -156,11 +157,12 @@ class QuestionnairesController < ApplicationController
         questions.each do |question|
           raise 'There are responses based on this rubric, we suggest you do not delete it.' unless question.answers.empty?
         end
-        questions.each do |question|
-          advices = question.question_advices
-          advices.each(&:delete)
-          question.delete
-        end
+        redirect_to controller:'questions', action:'deleteFromQuestionnare', questions: questions
+        # questions.each do |question|
+        #   advices = question.question_advices
+        #   advices.each(&:delete)
+        #   question.delete
+        # end
         questionnaire_node = @questionnaire.questionnaire_node
         questionnaire_node.delete
         @questionnaire.delete
