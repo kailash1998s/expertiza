@@ -107,17 +107,13 @@ class QuestionnairesController < ApplicationController
   def update
     # If 'Add' or 'Edit/View advice' is clicked, redirect appropriately
     if params[:add_new_questions]
-      puts("reached add new question -------------")
-      Rails.logger.debug("debug:: hello")
       # redirect_to action: 'add_new_questions', id: params.permit(:id)[:id], question: params.permit(:new_question)[:new_question]
       nested_keys = params[:new_question].keys
       permitted_params = params.permit(:id, :new_question => nested_keys)
       redirect_to action: 'add_new_questions', id: permitted_params[:id], question: permitted_params[:new_question]
     elsif params[:view_advice]
-      puts("reached advice -------------")
       redirect_to controller: 'advice', action: 'edit_advice', id: params[:id]
     else
-      puts("reached else -------------")
       @questionnaire = Questionnaire.find(params[:id])
       begin
         # Save questionnaire information
@@ -200,6 +196,7 @@ class QuestionnairesController < ApplicationController
     num_of_existed_questions = Questionnaire.find(questionnaire_id).questions.size
     ((num_of_existed_questions + 1)..(num_of_existed_questions + params[:question][:total_num].to_i)).each do |i|
       question = Object.const_get(params[:question][:type]).create(txt: '', questionnaire_id: questionnaire_id, seq: i, type: params[:question][:type], break_before: true)
+
       if question.is_a? ScoredQuestion
         question.weight = params[:question][:weight]
         question.max_label = 'Strongly agree'
@@ -227,15 +224,17 @@ class QuestionnairesController < ApplicationController
     begin
       if params[:save]
         params[:question].each_pair do |k, v|
-          @question = Question.find(k)
-          # example of 'v' value
-          # {"seq"=>"1.0", "txt"=>"WOW", "weight"=>"1", "size"=>"50,3", "max_label"=>"Strong agree", "min_label"=>"Not agree"}
-          v.each_pair do |key, value|
-            @question.send(key + '=', value) unless @question.send(key) == value
-          end
-
-          @question.save
-          flash[:success] = 'All questions have been successfully saved!'
+          puts("saved")
+          redirect_to controller:'questions', action:'saveAllQuestionsFromQuestionnaire', k: k, v: v
+          # @question = Question.find(k)
+          # # example of 'v' value
+          # # {"seq"=>"1.0", "txt"=>"WOW", "weight"=>"1", "size"=>"50,3", "max_label"=>"Strong agree", "min_label"=>"Not agree"}
+          # v.each_pair do |key, value|
+          #   @question.send(key + '=', value) unless @question.send(key) == value
+          # end
+          #
+          # @question.save
+          # flash[:success] = 'All questions have been successfully saved!'
         end
       end
     rescue StandardError
