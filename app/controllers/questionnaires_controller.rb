@@ -249,8 +249,8 @@ class QuestionnairesController < ApplicationController
     redirect_to controller: 'tree_display', action: 'list'
   end
 
-   # factory method to create the appropriate question based on the type
-   def question_factory(type, questionnaire_id, seq)
+  # factory method to create the appropriate question based on the type
+  def question_factory(type, questionnaire_id, seq)
     if type == 'Criterion'
       return Criterion.create(txt: '', questionnaire_id: questionnaire_id, seq: seq, type: type, break_before: true)
     elsif type == 'Scale'
@@ -275,7 +275,6 @@ class QuestionnairesController < ApplicationController
       return ColumnHeader.create(txt: '', questionnaire_id: questionnaire_id, seq: seq, type: type, break_before: true)
     end
   end
-
 
   # Zhewei: This method is used to add new questions when editing questionnaire.
   def add_new_questions
