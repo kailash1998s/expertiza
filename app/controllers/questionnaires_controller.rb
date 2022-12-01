@@ -107,11 +107,13 @@ class QuestionnairesController < ApplicationController
   def update
     # If 'Add' or 'Edit/View advice' is clicked, redirect appropriately
     if params[:add_new_questions]
+      puts("reached add new question -------------")
       # redirect_to action: 'add_new_questions', id: params.permit(:id)[:id], question: params.permit(:new_question)[:new_question]
       nested_keys = params[:new_question].keys
       permitted_params = params.permit(:id, :new_question => nested_keys)
       redirect_to action: 'add_new_questions', id: permitted_params[:id], question: permitted_params[:new_question]
     elsif params[:view_advice]
+      puts("reached advice -------------")
       redirect_to controller: 'advice', action: 'edit_advice', id: params[:id]
     else
       puts("reached else -------------")
